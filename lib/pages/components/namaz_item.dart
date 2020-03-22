@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class NamazItem extends StatelessWidget {
   final String name;
@@ -8,13 +9,29 @@ class NamazItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 12.0, left: 15.0, right: 15.0),
-      color: Colors.green,
-      child: ListTile(
-        leading: Text(name),
-        trailing: Text(count.toString()),
+    return Slidable(
+      actionPane: SlidableDrawerActionPane(),
+      actionExtentRatio: 0.25,
+      child: Container(
+        margin: EdgeInsets.only(top: 12.0, left: 15.0, right: 15.0),
+        color: Colors.green,
+        child: ListTile(
+          leading: Text(name),
+          trailing: Text(count.toString()),
+        ),
       ),
+      secondaryActions: <Widget>[
+        IconSlideAction(
+          color: Colors.red,
+          iconWidget: Icon(Icons.add, size: 35.0),
+          onTap: () {},
+        ),
+        IconSlideAction(
+          color: Colors.green,
+          iconWidget: Icon(Icons.remove, size: 35.0),
+          onTap: () {},
+        ),
+      ],
     );
   }
 }
