@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:namaz_counter_provider/pages/calc_page.dart';
+import 'package:namaz_counter_provider/pages/setting_page.dart';
+import 'package:namaz_counter_provider/pages/statistic_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,6 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Widget> pages = [CalcPage(), StatisticPage(), SettingPage()];
   int _selectedIndex = 0;
 
   @override
@@ -21,7 +24,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: CalcPage(),
+      body: pages[_selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
           BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
