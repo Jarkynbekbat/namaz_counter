@@ -3,6 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:namaz_counter_provider/pages/calc_page.dart';
 import 'package:namaz_counter_provider/pages/setting_page.dart';
 import 'package:namaz_counter_provider/pages/statistic_page.dart';
+import 'package:namaz_counter_provider/services/local/local_data_service.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +16,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    LocalDataService.getData('dateFrom').then((dateFrom) {
+      if (dateFrom == null) setState(() => _selectedIndex = 2);
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Учет намазов'),
@@ -27,7 +32,7 @@ class _HomePageState extends State<HomePage> {
       body: pages[_selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
+          BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(0.1))
         ]),
         child: SafeArea(
           child: Padding(

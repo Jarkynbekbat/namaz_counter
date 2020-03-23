@@ -1,43 +1,71 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:namaz_counter_provider/providers/setting_provider.dart';
+import 'package:provider/provider.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends StatefulWidget {
+  @override
+  _SettingPageState createState() => _SettingPageState();
+}
+
+class _SettingPageState extends State<SettingPage> {
+  //TODO исправить баг при изменении даты
+  //TODO сделать переход на calc page после сохранении
+
+  DateTime tempDateFrom;
+  DateTime tempDateTo;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BasicDateField(title: 'от'),
-          BasicDateField(title: 'до'),
-        ],
+    return Scaffold(
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: Consumer<SettingProvider>(
+            builder: (context, settingModel, _) {
+              settingModel.initData();
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('дата от'),
+                  OutlineButton(
+                      onPressed: () async {
+                        tempDateFrom = await pickDate(context);
+                        setState(() {});
+                      },
+                      child: Text(
+                          '${tempDateFrom == null ? settingModel.dateFrom ?? 'выберите дату' : tempDateFrom}')),
+                  Text('дата до'),
+                  OutlineButton(
+                    onPressed: () async {
+                      tempDateTo = await pickDate(context);
+                      setState(() {});
+                    },
+                    child: Text(
+                        '${tempDateTo == null ? settingModel.dateTo ?? 'выберите дату' : tempDateTo}'),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.check),
+        onPressed: () {
+          Provider.of<SettingProvider>(context, listen: false)
+              .setDates(tempDateFrom, tempDateTo, context);
+        },
       ),
     );
   }
 }
 
-class BasicDateField extends StatelessWidget {
-  final String title;
-  final format = DateFormat("yyyy-MM-dd");
-  BasicDateField({this.title});
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text('дата ${title}:'),
-        DateTimeField(
-          format: format,
-          onShowPicker: (context, currentValue) {
-            return showDatePicker(
-                context: context,
-                firstDate: DateTime(1900),
-                initialDate: currentValue ?? DateTime.now(),
-                lastDate: DateTime(2100));
-          },
-        ),
-      ],
-    );
-  }
+Future<DateTime> pickDate(context) async {
+  return await showDatePicker(
+    context: context,
+    firstDate: DateTime(1900),
+    initialDate: DateTime.now(),
+    lastDate: DateTime.now(),
+  );
 }
