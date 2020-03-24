@@ -9,45 +9,56 @@ class NamazProvider extends ChangeNotifier {
   int shamCount;
   int kuptanCount;
 
-  int firstSum;
-  int currentSum;
-
   NamazProvider() {
     initData();
   }
 
   void initData() async {
-    try {
-      // получить данные из локального хранилища
-      this.bagymdatCount =
-          int.parse(await LocalDataService.getData('bagymdatCount'));
-      this.beshimCount =
-          int.parse(await LocalDataService.getData('beshimCount'));
-      this.asrCount = int.parse(await LocalDataService.getData('asrCount'));
-      this.shamCount = int.parse(await LocalDataService.getData('shamCount'));
-      this.kuptanCount =
-          int.parse(await LocalDataService.getData('kuptanCount'));
-      await LocalDataService.setData('currentSum', getSum().toString());
-      notifyListeners();
-    } catch (ex) {
-      //  если нет локальных данных , до делаю подсчет
-      int diff = await SettingProvider.getDiffInDays();
-      print(diff);
-      this.bagymdatCount = diff;
-      this.beshimCount = diff;
-      this.asrCount = diff;
-      this.shamCount = diff;
-      this.kuptanCount = diff;
-      await LocalDataService.setData('bagymdatCount', diff.toString());
-      await LocalDataService.setData('beshimCount', diff.toString());
-      await LocalDataService.setData('asrCount', diff.toString());
-      await LocalDataService.setData('shamCount', diff.toString());
-      await LocalDataService.setData('kuptanCount', diff.toString());
-
-      await LocalDataService.setData('firstSum', getSum().toString());
-      await LocalDataService.setData('currentSum', getSum().toString());
-      notifyListeners();
+    String testDateFrom = await LocalDataService.getData('dateFrom');
+    // если есть данные настроек
+    if (testDateFrom != null) {
+      String testCount = await LocalDataService.getData('bagymdatCount');
+      // если есть данные количествах
+      if (testCount != null) {
+        // получить данные и показать
+        this.bagymdatCount = int.parse(testCount);
+        this.beshimCount =
+            int.parse(await LocalDataService.getData('beshimCount'));
+        this.asrCount = int.parse(await LocalDataService.getData('asrCount'));
+        this.shamCount = int.parse(await LocalDataService.getData('shamCount'));
+        this.kuptanCount =
+            int.parse(await LocalDataService.getData('kuptanCount'));
+        await LocalDataService.setData('currentSum', getSum().toString());
+        notifyListeners();
+      }
+      // если нет данных о количествах , но есть данные о настроек , первый раз
+      else {
+        // делаю подсчет
+        int diff = await SettingProvider.getDiffInDays();
+        this.bagymdatCount = diff;
+        this.beshimCount = diff;
+        this.asrCount = diff;
+        this.shamCount = diff;
+        this.kuptanCount = diff;
+        // сохраняю локально
+        List<Future> futures = [];
+        futures.add(LocalDataService.setData('bagymdatCount', diff.toString()));
+        futures.add(LocalDataService.setData('beshimCount', diff.toString()));
+        futures.add(LocalDataService.setData('asrCount', diff.toString()));
+        futures.add(LocalDataService.setData('shamCount', diff.toString()));
+        futures.add(LocalDataService.setData('kuptanCount', diff.toString()));
+        await Future.wait(futures);
+        //  делаю подсчет сумм и сохраняю локально
+        futures = [];
+        futures.add(LocalDataService.setData('firstSum', getSum().toString()));
+        futures
+            .add(LocalDataService.setData('currentSum', getSum().toString()));
+        await Future.wait(futures);
+        notifyListeners();
+      }
     }
+    // если нет данных настроек
+    else {}
   }
 
   int getSum() {
@@ -83,20 +94,28 @@ class NamazProvider extends ChangeNotifier {
   }
 
   void minusNamaz(name) async {
-    name == 'Багымдат'
-        ? await LocalDataService.setData(
-            'bagymdatCount', (--this.bagymdatCount).toString())
-        : name == 'Бешим'
-            ? await LocalDataService.setData(
-                'beshimCount', (--this.beshimCount).toString())
-            : name == 'Аср'
-                ? await LocalDataService.setData(
-                    'asrCount', (--this.asrCount).toString())
-                : name == 'Шам'
-                    ? await LocalDataService.setData(
-                        'shamCount', (--this.shamCount).toString())
-                    : await LocalDataService.setData(
-                        'kuptanCount', (--this.kuptanCount).toString());
+    switch (name) {
+      case 'Багымдат':
+        await LocalDataService.setData(
+            'bagymdatCount', (--this.bagymdatCount).toString());
+        break;
+      case 'Бешим':
+        await LocalDataService.setData(
+            'beshimCount', (--this.beshimCount).toString());
+        break;
+      case 'Аср':
+        await LocalDataService.setData(
+            'asrCount', (--this.asrCount).toString());
+        break;
+      case 'Шам':
+        await LocalDataService.setData(
+            'shamCount', (--this.shamCount).toString());
+        break;
+      case 'Куптан':
+        await LocalDataService.setData(
+            'kuptanCount', (--this.kuptanCount).toString());
+        break;
+    }
 
     if (this.bagymdatCount < 0) {
       await LocalDataService.setData(

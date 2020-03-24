@@ -1,15 +1,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
-
+// startDate
 // dateFrom
 // dateTo
-
 // bagymdatCount
 // beshimCount
 // asrCount
 // shamCount
 // kuptanCount
-
 // firstSum
+// currentSum
 
 class LocalDataService {
   static Future<bool> setData(String key, String value) async {

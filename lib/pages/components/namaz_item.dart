@@ -15,27 +15,79 @@ class NamazItem extends StatelessWidget {
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
       child: Container(
-        // margin: EdgeInsets.only(top: 12.0, left: 15.0, right: 15.0),
-        color: Colors.green,
+        padding: EdgeInsets.symmetric(horizontal: 22),
+        decoration: BoxDecoration(
+          // color: Color(0xFFa6b1e1),
+          color: Color(0xFFa6b1e1),
+          border: Border(
+            bottom: BorderSide(
+              color: Color(0xfff4eeff),
+            ),
+          ),
+        ),
         child: ListTile(
-          leading: Text(name),
-          trailing: Text(count.toString()),
+          leading: Text(
+            name,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          trailing: Container(
+            height: 40.0,
+            padding: EdgeInsets.only(left: 15.0),
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(
+                  color: Color(0xff424874),
+                ),
+              ),
+            ),
+            child: Text(
+              count.toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  .copyWith(fontSize: 20, fontStyle: FontStyle.italic),
+            ),
+          ),
         ),
       ),
       secondaryActions: <Widget>[
-        IconSlideAction(
-          color: Colors.red,
-          iconWidget: Icon(Icons.add, size: 35.0),
-          onTap: () {
-            Provider.of<NamazProvider>(context, listen: false).plusNamaz(name);
-          },
+        Container(
+          decoration: BoxDecoration(
+            color: Color(0xFFa6b1e1),
+            border: Border(
+              bottom: BorderSide(
+                color: Color(0xfff4eeff),
+              ),
+            ),
+          ),
+          child: IconSlideAction(
+            // color: Colors.red,
+            color: Color(0xff424874),
+            iconWidget: Icon(Icons.add),
+            onTap: () {
+              Provider.of<NamazProvider>(context, listen: false)
+                  .plusNamaz(name);
+            },
+          ),
         ),
-        IconSlideAction(
-          color: Colors.green,
-          iconWidget: Icon(Icons.remove, size: 35.0),
-          onTap: () {
-            Provider.of<NamazProvider>(context, listen: false).minusNamaz(name);
-          },
+        Container(
+          decoration: BoxDecoration(
+            color: Color(0xFFa6b1e1),
+            border: Border(
+              bottom: BorderSide(
+                color: Color(0xfff4eeff),
+              ),
+            ),
+          ),
+          child: IconSlideAction(
+            // color: Colors.green,
+            color: Color(0xff424874),
+            iconWidget: Icon(Icons.remove),
+            onTap: () {
+              Provider.of<NamazProvider>(context, listen: false)
+                  .minusNamaz(name);
+            },
+          ),
         ),
       ],
     );

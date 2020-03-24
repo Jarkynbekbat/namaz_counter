@@ -11,6 +11,7 @@ class CalcPage extends StatelessWidget {
         builder: (context, namazModel, _) {
           namazModel.initData();
           return Container(
+            // padding: EdgeInsets.symmetric(horizontal: 22),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

@@ -8,9 +8,6 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  //TODO исправить баг при изменении даты
-  //TODO сделать переход на calc page после сохранении
-
   DateTime tempDateFrom;
   DateTime tempDateTo;
 
@@ -27,7 +24,7 @@ class _SettingPageState extends State<SettingPage> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('дата от'),
+                  Text('дата от', style: Theme.of(context).textTheme.bodyText1),
                   OutlineButton(
                       onPressed: () async {
                         tempDateFrom = await pickDate(context);
@@ -35,7 +32,7 @@ class _SettingPageState extends State<SettingPage> {
                       },
                       child: Text(
                           '${tempDateFrom == null ? settingModel.dateFrom ?? 'выберите дату' : tempDateFrom}')),
-                  Text('дата до'),
+                  Text('дата до', style: Theme.of(context).textTheme.bodyText1),
                   OutlineButton(
                     onPressed: () async {
                       tempDateTo = await pickDate(context);

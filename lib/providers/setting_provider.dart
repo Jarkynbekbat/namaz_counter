@@ -12,9 +12,14 @@ class SettingProvider extends ChangeNotifier {
   }
 
   void initData() async {
-    this.dateFrom = DateTime.parse(await LocalDataService.getData('dateFrom'));
-    this.dateTo = DateTime.parse(await LocalDataService.getData('dateTo'));
-    notifyListeners();
+    try {
+      this.dateFrom =
+          DateTime.parse(await LocalDataService.getData('dateFrom'));
+      this.dateTo = DateTime.parse(await LocalDataService.getData('dateTo'));
+      notifyListeners();
+    } catch (ex) {
+      print(ex);
+    }
   }
 
   void setDates(DateTime from, DateTime to, BuildContext context) async {
@@ -32,23 +37,20 @@ class SettingProvider extends ChangeNotifier {
           //если ответ да то сохранить локально
           await LocalDataService.setData('dateFrom', from.toString());
           await LocalDataService.setData('dateTo', to.toString());
+          await LocalDataService.setData(
+              'startDate', DateTime.now().toString());
 
           showSnackBar('Сохранено!', context);
-
-          await LocalDataService.deleteData('bagymdatCount');
-          await LocalDataService.deleteData('beshimCount');
-          await LocalDataService.deleteData('asrCount');
-          await LocalDataService.deleteData('shamCount');
-          await LocalDataService.deleteData('kuptanCount');
-
+          clearCounts();
           initData();
         }
       } else {
         // сохранить данные локально
         await LocalDataService.setData('dateFrom', from.toString());
         await LocalDataService.setData('dateTo', to.toString());
-
+        await LocalDataService.setData('startDate', DateTime.now().toString());
         showSnackBar('Сохранено!', context);
+        clearCounts();
         initData();
       }
     } else if ((from != null && to == null) && this.dateTo != null) {
@@ -63,14 +65,9 @@ class SettingProvider extends ChangeNotifier {
         //если ответ да то сохранить локально
         await LocalDataService.setData('dateFrom', from.toString());
         await LocalDataService.setData('dateTo', this.dateTo.toString());
-
+        await LocalDataService.setData('startDate', DateTime.now().toString());
         showSnackBar('Сохранено!', context);
-
-        await LocalDataService.deleteData('bagymdatCount');
-        await LocalDataService.deleteData('beshimCount');
-        await LocalDataService.deleteData('asrCount');
-        await LocalDataService.deleteData('shamCount');
-        await LocalDataService.deleteData('kuptanCount');
+        clearCounts();
         initData();
       }
     } else if ((from == null && to != null) && this.dateFrom != null) {
@@ -85,22 +82,14 @@ class SettingProvider extends ChangeNotifier {
         //если ответ да то сохранить локально
         await LocalDataService.setData('dateFrom', this.dateFrom.toString());
         await LocalDataService.setData('dateTo', to.toString());
-
+        await LocalDataService.setData('startDate', DateTime.now().toString());
         showSnackBar('Сохранено!', context);
-
-        await LocalDataService.deleteData('bagymdatCount');
-        await LocalDataService.deleteData('beshimCount');
-        await LocalDataService.deleteData('asrCount');
-        await LocalDataService.deleteData('shamCount');
-        await LocalDataService.deleteData('kuptanCount');
-
+        clearCounts();
         initData();
       }
     } else {
       showSnackBar('Выберите даты!', context);
     }
-
-    // TODO вывести сообщение
   }
 
   static Future<int> getDiffInDays() async {
@@ -113,4 +102,14 @@ class SettingProvider extends ChangeNotifier {
       return 0;
     }
   }
+}
+
+void clearCounts() async {
+  List<Future> futures = [];
+  futures.add(LocalDataService.deleteData('bagymdatCount'));
+  futures.add(LocalDataService.deleteData('beshimCount'));
+  futures.add(LocalDataService.deleteData('asrCount'));
+  futures.add(LocalDataService.deleteData('shamCount'));
+  futures.add(LocalDataService.deleteData('kuptanCount'));
+  Future.wait(futures);
 }
