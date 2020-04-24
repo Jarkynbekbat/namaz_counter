@@ -1,6 +1,8 @@
 # namaz_counter_provider
 
-A new Flutter project.
+The goal of this app to calculate missed namaz's (pray)
+State management: Provider,
+
 
 ## Getting Started
 
