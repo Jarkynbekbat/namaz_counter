@@ -1,8 +1,14 @@
 # namaz_counter_provider
 
 The goal of this app to calculate missed namaz's (pray)
-State management: Provider,
+State management: Provider
 
+## UI
+<p align="center">
+  <img src="https://github.com/Jarkynbekbat/namaz_counter/blob/master/assets/screenshots/screenshot_2.jpg" width="250">
+  <img src="https://github.com/Jarkynbekbat/namaz_counter/blob/master/assets/screenshots/screenshot_1.jpg" width="250">
+  <img src="https://github.com/Jarkynbekbat/namaz_counter/blob/master/assets/screenshots/screenshot_3.jpg" width="250">
+</p>
 
 ## Getting Started
 
