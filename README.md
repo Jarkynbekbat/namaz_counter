@@ -1,7 +1,7 @@
 # namaz_counter_provider
 
 The goal of this app to calculate missed namaz's (pray)
-State management: Provider
+
 
 ## UI
 <p align="center">
